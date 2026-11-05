@@ -1,0 +1,7 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "kcurtet-com-www",
+	"main": "index.js",
+	"compatibility_date": "2026-11-05",
+	"routes": [{ "pattern": "www.kcurtet.com", "custom_domain": true }]
+}

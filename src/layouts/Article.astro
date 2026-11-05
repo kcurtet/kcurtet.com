@@ -1,0 +1,51 @@
+---
+import Base from './Base.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	eyebrow?: string;
+	tags?: string[];
+	back: { href: string; label: string };
+}
+const { title, description, eyebrow, tags = [], back } = Astro.props;
+---
+
+<Base title={title} description={description}>
+	<article class="wrap">
+		<header class="head">
+			{eyebrow && <p class="eyebrow">{eyebrow}</p>}
+			<h1>{title}</h1>
+			{description && <p class="lead">{description}</p>}
+			{tags.length > 0 && <p class="tags">{tags.map((t) => <span class="tag">{t}</span>)}</p>}
+			<slot name="meta" />
+		</header>
+		<div class="prose">
+			<slot />
+		</div>
+		<p class="back"><a href={back.href}>← {back.label}</a></p>
+	</article>
+</Base>
+
+<style>
+	.head {
+		padding-top: 1.5rem;
+		margin-bottom: 2rem;
+		padding-bottom: 1.25rem;
+		border-bottom: 1px solid var(--line);
+	}
+	.lead {
+		font-size: 1.1rem;
+		color: var(--muted);
+		margin: 0.25rem 0 0.75rem;
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin: 0;
+	}
+	.back {
+		margin-top: 3rem;
+	}
+</style>

@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+
+export async function getStaticPaths() {
+	const proyectos = await getCollection('proyectos', ({ data }) => !data.draft);
+	return proyectos.map((p) => ({ params: { id: p.id }, props: { p } }));
+}
+
+const { p } = Astro.props;
+const { Content } = await render(p);
+---
+
+<Article title={p.data.title} description={p.data.resumen} eyebrow="Proyecto" tags={p.data.stack} back={{ href: '/proyectos/', label: 'Todos los proyectos' }}>
+	{p.data.repo && <p slot="meta" class="repo"><a href={p.data.repo}>Código en GitHub →</a></p>}
+	<Content />
+</Article>
+
+<style>
+	.repo {
+		margin: 0.75rem 0 0;
+	}
+</style>

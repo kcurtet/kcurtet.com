@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import EntryList from '../../../components/EntryList.astro';
+import { CURSOS } from '../../../consts';
+
+export async function getStaticPaths() {
+	return CURSOS.map((curso) => ({ params: { curso: curso.slug }, props: { curso } }));
+}
+
+const { curso } = Astro.props;
+const caps = (await getCollection('cursos', ({ data }) => !data.draft && data.curso === curso.slug)).sort(
+	(a, b) => a.data.orden - b.data.orden,
+);
+---
+
+<Base title={curso.title} description={curso.description}>
+	<div class="wrap">
+		<p class="eyebrow"><a href="/cursos/">Cursos</a></p>
+		<h1>{curso.title}</h1>
+		<p class="lead muted">{curso.description}</p>
+		<EntryList
+			items={caps.map((c) => ({
+				href: `/cursos/${curso.slug}/${c.id.split('/')[1]}/`,
+				title: c.data.title,
+				meta: c.data.capitulo === 0 ? 'Intro' : `Capítulo ${c.data.capitulo}`,
+			}))}
+		/>
+	</div>
+</Base>
+
+<style>
+	.lead {
+		font-size: 1.1rem;
+		margin: 0.25rem 0 1.5rem;
+	}
+</style>

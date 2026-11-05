@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+import { SITE, NAV, LINKS } from '../consts';
+
+interface Props {
+	title?: string;
+	description?: string;
+	lang?: 'es' | 'fr';
+	alternate?: { es?: string; fr?: string };
+}
+
+const { title, description = SITE.descripcion, lang = 'es', alternate } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.nombre}` : `${SITE.nombre} — ${SITE.titular}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{pageTitle}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<link rel="alternate" type="application/rss+xml" title={`${SITE.nombre} — Blog`} href="/rss.xml" />
+		{alternate?.es && <link rel="alternate" hreflang="es" href={new URL(alternate.es, Astro.site)} />}
+		{alternate?.fr && <link rel="alternate" hreflang="fr" href={new URL(alternate.fr, Astro.site)} />}
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'es_ES'} />
+	</head>
+	<body>
+		<a class="sr-only" href="#main">Saltar al contenido</a>
+		<header class="site-header wrap-wide">
+			<a class="brand" href="/" aria-label="Inicio">
+				<span class="prompt">~/</span>kcurtet
+			</a>
+			<nav aria-label="Principal">
+				{
+					NAV.map((item) => (
+						<a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+							{item.label}
+						</a>
+					))
+				}
+			</nav>
+		</header>
+
+		<main id="main">
+			<slot />
+		</main>
+
+		<footer class="site-footer wrap-wide">
+			<p>
+				<a href={`mailto:${LINKS.email}`}>{LINKS.email}</a> ·
+				<a href={LINKS.github} rel="me">GitHub</a> ·
+				<a href={LINKS.linkedin} rel="me">LinkedIn</a> ·
+				<a href="/rss.xml">RSS</a> ·
+				<a href="/fr/a-propos/" hreflang="fr" lang="fr">Français</a>
+			</p>
+			<p class="muted">© {new Date().getFullYear()} {SITE.nombre}. Hecho con Astro, sin cookies.</p>
+		</footer>
+	</body>
+</html>
+
+<style>
+	.site-header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.75rem 1.5rem;
+		padding-top: 1.5rem;
+		padding-bottom: 1.5rem;
+	}
+	.brand {
+		font-family: var(--font-mono);
+		font-weight: 600;
+		color: var(--fg);
+		text-decoration: none;
+	}
+	.prompt {
+		color: var(--accent);
+	}
+	nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.25rem;
+		font-size: 0.95rem;
+	}
+	nav a {
+		color: var(--muted);
+		text-decoration: none;
+	}
+	nav a:hover,
+	nav a[aria-current='page'] {
+		color: var(--fg);
+	}
+	nav a[aria-current='page'] {
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-underline-offset: 0.35em;
+	}
+	main {
+		min-height: 60vh;
+		padding-bottom: 4rem;
+	}
+	.site-footer {
+		border-top: 1px solid var(--line);
+		padding-top: 1.5rem;
+		padding-bottom: 2.5rem;
+		font-size: 0.9rem;
+	}
+	.site-footer p {
+		margin: 0.25rem 0;
+	}
+	.sr-only:focus {
+		position: fixed;
+		top: 0.5rem;
+		left: 0.5rem;
+		width: auto;
+		height: auto;
+		clip: auto;
+		padding: 0.5rem 1rem;
+		background: var(--bg);
+		z-index: 10;
+	}
+</style>

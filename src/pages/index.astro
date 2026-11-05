@@ -1,0 +1,159 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import EntryList from '../components/EntryList.astro';
+import { SITE, LINKS, fechaCorta, CURSOS } from '../consts';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf())
+	.slice(0, 3);
+const proyectos = (await getCollection('proyectos', ({ data }) => !data.draft))
+	.sort((a, b) => a.data.orden - b.data.orden)
+	.slice(0, 3);
+const notas = (await getCollection('notas', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf())
+	.slice(0, 4);
+const capitulosCurso = await getCollection('cursos', ({ data }) => !data.draft && data.capitulo > 0);
+---
+
+<Base>
+	<section class="hero wrap">
+		<p class="eyebrow">Girona · FR / ES / CA nativo</p>
+		<h1>{SITE.nombre}</h1>
+		<p class="lead">
+			{SITE.titular}. Uso Linux a diario, mantengo un homelab y me gusta entender por qué falla algo,
+			arreglarlo y, si se repite, automatizarlo.
+		</p>
+		{
+			SITE.disponible && (
+				<p class="status">
+					<span class="dot" aria-hidden="true" />
+					{SITE.ahora}
+				</p>
+			)
+		}
+		<p class="cta">
+			<a class="btn" href={LINKS.cv}>Descargar CV (PDF)</a>
+			<a href={`mailto:${LINKS.email}`}>Escríbeme</a>
+			<a href={LINKS.linkedin}>LinkedIn</a>
+		</p>
+	</section>
+
+	<section class="wrap strengths" aria-label="Puntos fuertes">
+		<div>
+			<h2>Linux y redes, de verdad</h2>
+			<p>Mi sistema de trabajo desde hace años. DNS, DHCP, VPN y diagnóstico capa por capa en mi propia red.</p>
+		</div>
+		<div>
+			<h2>Homelab en producción</h2>
+			<p>Contenedores, despliegues con HTTPS, acceso remoto con Tailscale y webs de clientes en mi VPS.</p>
+		</div>
+		<div>
+			<h2>Soporte en tres idiomas</h2>
+			<p>Francés, español y catalán nativos, y diez años tratando con clientes bajo presión.</p>
+		</div>
+	</section>
+
+	<section class="wrap">
+		<h2 class="section-title">Proyectos <a href="/proyectos/">ver todos →</a></h2>
+		<EntryList items={proyectos.map((p) => ({ href: `/proyectos/${p.id}/`, title: p.data.title, description: p.data.resumen }))} />
+	</section>
+
+	<section class="wrap">
+		<h2 class="section-title">Blog <a href="/blog/">ver todo →</a></h2>
+		<EntryList
+			items={posts.map((p) => ({ href: `/blog/${p.id}/`, title: p.data.title, meta: fechaCorta(p.data.fecha), description: p.data.description }))}
+		/>
+	</section>
+
+	<section class="wrap">
+		<h2 class="section-title">Cursos <a href="/cursos/">ver todos →</a></h2>
+		<EntryList
+			items={CURSOS.map((c) => ({
+				href: `/cursos/${c.slug}/`,
+				title: c.title,
+				meta: `${capitulosCurso.filter((e) => e.data.curso === c.slug).length} capítulos`,
+				description: c.description,
+			}))}
+		/>
+	</section>
+
+	<section class="wrap">
+		<h2 class="section-title">Notas de troubleshooting <a href="/notas/">ver todas →</a></h2>
+		<EntryList items={notas.map((n) => ({ href: `/notas/${n.id}/`, title: n.data.title, meta: n.data.categoria }))} />
+	</section>
+</Base>
+
+<style>
+	.hero {
+		padding-top: 2.5rem;
+		padding-bottom: 2rem;
+	}
+	.lead {
+		font-size: 1.2rem;
+		max-width: 36rem;
+		color: var(--muted);
+	}
+	.status {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.6rem;
+		font-size: 0.92rem;
+		padding: 0.4rem 0.85rem;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: var(--bg-soft);
+	}
+	.dot {
+		width: 0.55rem;
+		height: 0.55rem;
+		border-radius: 50%;
+		background: var(--ok);
+		flex: none;
+	}
+	.cta {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1.25rem;
+		margin-top: 1.5rem;
+	}
+	.btn {
+		background: var(--accent);
+		color: var(--bg);
+		padding: 0.55rem 1rem;
+		border-radius: 6px;
+		text-decoration: none;
+		font-weight: 600;
+	}
+	.btn:hover {
+		filter: brightness(1.1);
+	}
+	.strengths {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+		gap: 1.5rem;
+		padding-top: 1rem;
+		padding-bottom: 1rem;
+	}
+	.strengths h2 {
+		font-size: 1rem;
+		margin: 0 0 0.35rem;
+	}
+	.strengths p {
+		margin: 0;
+		font-size: 0.95rem;
+		color: var(--muted);
+	}
+	.section-title {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 1rem;
+		margin-bottom: 0.25rem;
+	}
+	.section-title a {
+		font-size: 0.85rem;
+		font-weight: 400;
+	}
+</style>

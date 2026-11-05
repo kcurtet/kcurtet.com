@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { CURSOS } from '../../consts';
+
+// Nota: los cursos solo existen en español. No se traducen a fr/ ni se añaden
+// páginas bajo /fr/ (la versión francesa del sitio es solo la página "à propos").
+
+const capitulos = await getCollection('cursos', ({ data }) => !data.draft);
+const totalPorCurso = new Map(
+	CURSOS.map((c) => [
+		c.slug,
+		capitulos.filter((e) => e.data.curso === c.slug && e.data.capitulo > 0).length,
+	]),
+);
+---
+
+<Base
+	title="Cursos"
+	description="Libros-curso para pasar de administrar sistemas en casa a Soporte N1: Active Directory, Microsoft 365 e ITIL/ticketing."
+>
+	<div class="wrap">
+		<h1>Cursos</h1>
+		<p class="muted">
+			Tres libros-curso que escribí para cerrar mis propios gaps: cada uno va de cero corporativo a
+			nivel de entrevista y primer día de helpdesk N1.
+		</p>
+		<EntryList
+			items={[...CURSOS]
+				.sort((a, b) => a.orden - b.orden)
+				.map((c) => ({
+					href: `/cursos/${c.slug}/`,
+					title: c.title,
+					meta: `${totalPorCurso.get(c.slug)} capítulos`,
+					description: c.description,
+				}))}
+		/>
+	</div>
+</Base>

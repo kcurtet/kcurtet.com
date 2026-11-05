@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+import { fechaCorta } from '../../consts';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.fecha.valueOf() - a.data.fecha.valueOf(),
+);
+---
+
+<Base title="Blog" description="Lo que estoy aprendiendo: Active Directory, sistemas, redes y automatización.">
+	<div class="wrap">
+		<h1>Blog</h1>
+		<p class="muted">
+			Lo que estoy aprendiendo, contado desde alguien que viene de Linux. <a href="/rss.xml">RSS</a>
+		</p>
+		<EntryList
+			items={posts.map((p) => ({
+				href: `/blog/${p.id}/`,
+				title: p.data.title,
+				meta: fechaCorta(p.data.fecha),
+				description: p.data.description,
+			}))}
+		/>
+	</div>
+</Base>

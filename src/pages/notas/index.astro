@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EntryList from '../../components/EntryList.astro';
+
+const notas = await getCollection('notas', ({ data }) => !data.draft);
+const categorias = [...new Set(notas.map((n) => n.data.categoria))].sort();
+---
+
+<Base title="Notas de troubleshooting" description="Incidencias reales o practicadas: síntoma, diagnóstico, causa y solución. Redes, Linux y Windows.">
+	<div class="wrap">
+		<h1>Notas de troubleshooting</h1>
+		<p class="muted">
+			Problemas reales o practicados, siempre con el mismo formato: síntoma → diagnóstico → causa → solución → prevención. Las
+			escribo para no investigar dos veces lo mismo.
+		</p>
+		{
+			categorias.map((c) => (
+				<section>
+					<h2>{c}</h2>
+					<EntryList
+						items={notas
+							.filter((n) => n.data.categoria === c)
+							.sort((a, b) => a.data.title.localeCompare(b.data.title, 'es'))
+							.map((n) => ({ href: `/notas/${n.id}/`, title: n.data.title, description: n.data.sintoma }))}
+					/>
+				</section>
+			))
+		}
+	</div>
+</Base>

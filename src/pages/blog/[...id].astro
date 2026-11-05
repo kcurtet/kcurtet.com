@@ -1,0 +1,30 @@
+---
+import { getCollection, render } from 'astro:content';
+import Article from '../../layouts/Article.astro';
+import { fechaCorta } from '../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	return posts.map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const { title, description, fecha, actualizado, serie, tags } = post.data;
+---
+
+<Article title={title} description={description} eyebrow={serie ? `Serie · ${serie}` : 'Blog'} tags={tags} back={{ href: '/blog/', label: 'Todos los posts' }}>
+	<p slot="meta" class="muted date">
+		<time datetime={fecha.toISOString()}>{fechaCorta(fecha)}</time>
+		{actualizado && <> · actualizado <time datetime={actualizado.toISOString()}>{fechaCorta(actualizado)}</time></>}
+	</p>
+	<Content />
+</Article>
+
+<style>
+	.date {
+		font-family: var(--font-mono);
+		font-size: 0.8rem;
+		margin: 0.75rem 0 0;
+	}
+</style>

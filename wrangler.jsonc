@@ -1,0 +1,10 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "kcurtet-com",
+	"compatibility_date": "2026-11-05",
+	"assets": {
+		"directory": "./dist",
+		"not_found_handling": "404-page"
+	},
+	"routes": [{ "pattern": "kcurtet.com", "custom_domain": true }]
+}

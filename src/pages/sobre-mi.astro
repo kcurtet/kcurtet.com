@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import { LINKS } from '../consts';
+---
+
+<Base title="Sobre mí" description="Técnico de soporte IT en Girona: Linux, redes, homelab y tres idiomas nativos." alternate={{ es: '/sobre-mi/', fr: '/fr/a-propos/' }}>
+	<article class="wrap prose">
+		<p class="eyebrow">Sobre mí · <a href="/fr/a-propos/" hreflang="fr" lang="fr">Version française</a></p>
+		<h1>Hola, soy Kevin</h1>
+
+		<p>
+			Soy técnico de soporte IT y vivo en el Alt Empordà (Girona). Estudié el ciclo de <strong>Sistemas Microinformáticos y Redes</strong>
+			y desde entonces no he dejado de trastear: uso Linux a diario, tengo un <a href="/proyectos/homelab/">homelab</a> con contenedores
+			y mi portátil está <a href="/proyectos/nixos/">descrito en código</a>.
+		</p>
+
+		<p>
+			Pasé diez años en hostelería. Puede parecer que no tiene nada que ver, pero es justo lo que se necesita en soporte: atender a gente
+			que tiene prisa y un problema, mantener la calma en los picos y resolver sin hacer sentir mal a nadie. Después trabajé en logística
+			en Amazon, por objetivos y con ritmo.
+		</p>
+
+		<p>
+			Desde 2026 llevo <a href={LINKS.nutux}>Nutux Labs</a>, donde doy soporte a autónomos y pymes: dominios, correo profesional,
+			webs con mantenimiento y copias de seguridad, y automatización de tareas repetitivas. Ahí hago de helpdesk entero: desde atender
+			la llamada hasta arreglar el DNS.
+		</p>
+
+		<h2>Qué busco</h2>
+		<p>
+			Mi primer puesto en <strong>soporte IT / helpdesk</strong> en Girona, Barcelona o en remoto. A medio plazo quiero crecer hacia
+			sistemas y automatización, y me atrae la seguridad. Mientras tanto, aprendo en público: lo que estudio va al <a href="/blog/">blog</a>
+			y lo que arreglo, a las <a href="/notas/">notas</a>.
+		</p>
+
+		<h2>Lo que uso</h2>
+		<table>
+			<tbody>
+				<tr><th scope="row">Sistemas</th><td>Linux (Arch/CachyOS, NixOS, Debian, Ubuntu) · Windows (instalación y soporte) · aprendiendo Active Directory y PowerShell</td></tr>
+				<tr><th scope="row">Redes</th><td>TCP/IP, DHCP, DNS, Wi-Fi, VPN (Tailscale), routers</td></tr>
+				<tr><th scope="row">Infraestructura</th><td>Docker, Podman, Dokku, Coolify, VPS con HTTPS, Cloudflare</td></tr>
+				<tr><th scope="row">Scripting</th><td>Bash, TypeScript/Node.js, n8n · Git</td></tr>
+				<tr><th scope="row">Hardware</th><td>Montaje, diagnóstico, reparación y mantenimiento</td></tr>
+			</tbody>
+		</table>
+
+		<h2>Idiomas</h2>
+		<p>Francés, español y catalán nativos. Inglés: lo leo y lo entiendo con soltura; lo hablo a nivel intermedio.</p>
+
+		<h2>Contacto</h2>
+		<p>
+			<a href={`mailto:${LINKS.email}`}>{LINKS.email}</a> · <a href={LINKS.linkedin}>LinkedIn</a> · <a href={LINKS.github}>GitHub</a> ·
+			<a href={LINKS.cv}>CV en PDF</a>
+		</p>
+	</article>
+</Base>
+
+<style>
+	article {
+		padding-top: 1.5rem;
+	}
+	th {
+		white-space: nowrap;
+		color: var(--muted);
+		font-weight: 500;
+	}
+</style>

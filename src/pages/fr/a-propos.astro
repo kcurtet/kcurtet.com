@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LINKS } from '../../consts';
+---
+
+<Base
+	lang="fr"
+	title="À propos"
+	description="Technicien support IT à Gérone (Espagne) : Linux, réseaux, homelab. Français, espagnol et catalan natifs."
+	alternate={{ es: '/sobre-mi/', fr: '/fr/a-propos/' }}
+>
+	<article class="wrap prose">
+		<p class="eyebrow">À propos · <a href="/sobre-mi/" hreflang="es" lang="es">Versión en español</a></p>
+		<h1>Bonjour, je m'appelle Kevin</h1>
+
+		<p>
+			Je suis technicien support IT, basé dans l'Alt Empordà (Gérone, Espagne), à une heure de la frontière française.
+			<strong>Le français est ma langue maternelle</strong>, comme l'espagnol et le catalan.
+		</p>
+
+		<p>
+			J'ai suivi une formation en <strong>systèmes informatiques et réseaux</strong> (CFGM SMX). J'utilise Linux au quotidien, je gère un
+			<a href="/proyectos/homelab/">homelab</a> avec des conteneurs, et la configuration complète de mon portable est
+			<a href="/proyectos/nixos/">décrite en code</a>.
+		</p>
+
+		<p>
+			Pendant dix ans j'ai travaillé dans la restauration : accueillir des clients pressés, garder son calme dans les rushs et trouver une
+			solution sans mettre personne mal à l'aise. C'est exactement ce que demande le support. Depuis 2026, avec
+			<a href={LINKS.nutux}>Nutux Labs</a>, j'assure le support de petites entreprises et d'indépendants : domaines, messagerie
+			professionnelle, sites web avec maintenance et sauvegardes, automatisation.
+		</p>
+
+		<h2>Ce que je recherche</h2>
+		<p>
+			Un premier poste en <strong>support IT / helpdesk</strong>, idéalement francophone : en télétravail pour une entreprise française, ou
+			sur site à Barcelone ou Gérone. Disponibilité immédiate, tous horaires.
+		</p>
+
+		<h2>Compétences</h2>
+		<ul>
+			<li><strong>Systèmes :</strong> Linux (Arch, NixOS, Debian, Ubuntu), Windows (installation et support), Active Directory en cours d'apprentissage.</li>
+			<li><strong>Réseaux :</strong> TCP/IP, DHCP, DNS, Wi-Fi, VPN.</li>
+			<li><strong>Infrastructure :</strong> Docker, Podman, VPS avec HTTPS, Cloudflare.</li>
+			<li><strong>Scripts :</strong> Bash, TypeScript/Node.js, Git.</li>
+			<li><strong>Matériel :</strong> montage, diagnostic, réparation.</li>
+		</ul>
+
+		<h2>Langues</h2>
+		<p>Français, espagnol et catalan : langues maternelles. Anglais : bonne compréhension écrite et orale, expression orale intermédiaire.</p>
+
+		<p class="note muted">
+			Le reste du site (blog et notes) est en espagnol. N'hésitez pas à m'écrire en français.
+		</p>
+
+		<h2>Contact</h2>
+		<p>
+			<a href={`mailto:${LINKS.email}`}>{LINKS.email}</a> · <a href={LINKS.linkedin}>LinkedIn</a> · <a href={LINKS.github}>GitHub</a> ·
+			<a href={LINKS.cv}>CV (PDF, en espagnol)</a>
+		</p>
+	</article>
+</Base>
+
+<style>
+	article {
+		padding-top: 1.5rem;
+	}
+</style>

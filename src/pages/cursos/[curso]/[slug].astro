@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from 'astro:content';
+import Capitulo from '../../../layouts/Capitulo.astro';
+import { CURSOS } from '../../../consts';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('cursos', ({ data }) => !data.draft);
+	const groups = new Map<string, typeof entries>();
+	for (const entry of entries) {
+		const list = groups.get(entry.data.curso) ?? [];
+		list.push(entry);
+		groups.set(entry.data.curso, list);
+	}
+
+	const paths = [];
+	for (const caps of groups.values()) {
+		caps.sort((a, b) => a.data.orden - b.data.orden);
+		const chapters = caps.filter((c) => c.data.capitulo > 0).length;
+		caps.forEach((cap, i) => {
+			const [cursoId, slug] = cap.id.split('/');
+			paths.push({
+				params: { curso: cursoId, slug },
+				props: {
+					cap,
+					prev: caps[i - 1],
+					next: caps[i + 1],
+					chapters,
+				},
+			});
+		});
+	}
+	return paths;
+}
+
+const { cap, prev, next, chapters } = Astro.props;
+const { Content } = await render(cap);
+const curso = CURSOS.find((c) => c.slug === cap.data.curso)!;
+const meta = cap.data.capitulo === 0 ? 'Introducción' : `Capítulo ${cap.data.capitulo} de ${chapters}`;
+---
+
+<Capitulo
+	title={cap.data.title}
+	description={cap.data.description}
+	eyebrow={`Curso · ${curso.title}`}
+	meta={meta}
+	index={{ href: `/cursos/${curso.slug}/`, label: 'Índice del curso' }}
+	prev={prev && { href: `/cursos/${prev.data.curso}/${prev.id.split('/')[1]}/`, title: prev.data.title }}
+	next={next && { href: `/cursos/${next.data.curso}/${next.id.split('/')[1]}/`, title: next.data.title }}
+>
+	<Content />
+</Capitulo>
