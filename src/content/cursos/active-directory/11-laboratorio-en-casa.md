@@ -89,7 +89,7 @@ $dom = "DC=corp,DC=lab"
 
 # Usuario admin del lab + usuario de prueba
 $pw = Read-Host "Password lab" -AsSecureString
-New-ADUser -Name "Kevin Lab" -SamAccountName klab -UserPrincipalName klab@corp.lab `
+New-ADUser -Name "John Doe" -SamAccountName jdoe -UserPrincipalName jdoe@corp.lab `
   -Path "OU=Soporte,OU=Empleados,$dom" -AccountPassword $pw -Enabled $true
 New-ADUser -Name "Ana Ruiz" -SamAccountName aruiz -UserPrincipalName aruiz@corp.lab `
   -Path "OU=Ventas,OU=Empleados,$dom" -AccountPassword $pw -Enabled $true

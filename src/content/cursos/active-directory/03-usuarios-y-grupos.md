@@ -22,7 +22,7 @@ Tres identificadores que se confunden constantemente:
 |---------------|---------|----------------|
 | **sAMAccountName** (login legacy) | `kmas` | Nombre de inicio de sesión pre-Windows 2000. Único en el dominio. Es lo que ves en ADUC como «nombre de cuenta de usuario». |
 | **UPN** (User Principal Name) | `kmas@corp.lab` | Lo que el usuario escribe para loguearse, formato email. |
-| **DN** (Distinguished Name) | `CN=Kevin Mas,OU=Soporte,DC=corp,DC=lab` | Posición en el árbol LDAP. |
+| **DN** (Distinguished Name) | `CN=John Doe,OU=Soporte,DC=corp,DC=lab` | Posición en el árbol LDAP. |
 
 Y debajo, el **SID** (Security Identifier, tipo `S-1-5-21-...-1103`): el identificador real que usan los permisos y el sistema. Windows muestra nombres, pero autoriza por SID. Esto explica una regla de oro que veremos en 3.3: **nunca borres una cuenta para recrearla.**
 

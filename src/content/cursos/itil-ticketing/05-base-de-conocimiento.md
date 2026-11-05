@@ -13,7 +13,7 @@ La paradoja del soporte: **quien comparte lo que sabe deja de ser el cuello de b
 
 - **Tu FCR sube.** Lo que resolviste una vez y documentaste, la segunda vez lo resuelves en 2 minutos leyéndote a ti mismo.
 - **El equipo responde igual de bien sin ti.** Turnos de noche, vacaciones, bajas: la KB es la memoria del equipo, no tu cabeza.
-- **Dejas rastro medible.** "Kevin escribió 14 artículos usados 300 veces este trimestre" es un argumento de subida de nivel (a N2, a referente) que nadie puede discutir.
+- **Dejas rastro medible.** "John Doe escribió 14 artículos usados 300 veces este trimestre" es un argumento de subida de nivel (a N2, a referente) que nadie puede discutir.
 - **Educas al usuario.** Un buen artículo de autoservicio evita el próximo ticket.
 
 La idea de fondo tiene nombre: **KCS** (Knowledge-Centered Service). En una línea: *captura el conocimiento mientras trabajas, no después* — el artículo se escribe al resolver, como parte del ticket, no como tarea extra el viernes. Y "arregla una vez, aprovecha muchas".

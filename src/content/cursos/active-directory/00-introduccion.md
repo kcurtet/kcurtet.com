@@ -60,7 +60,7 @@ Si conoces `dig`, `ldapsearch`, systemd y Docker, este libro te habla en tu idio
 | **GPO** | Política aplicada a máquinas/usuarios (config obligatoria tipo "dotfiles gestionados"). |
 | **Join** | Unir un equipo al dominio: pasa de cuenta local a autenticación central. |
 | **SRV** | Registro DNS que anuncia dónde está un servicio. Los DC se anuncian así. |
-| **UPN** | Nombre principal de usuario: `kevin@corp.local` (formato email para loguearse). |
+| **UPN** | Nombre principal de usuario: `jdoe@corp.local` (formato email para loguearse). |
 | **RSAT** | Herramientas de administración remota: los mgmt tools del DC en tu PC. |
 | **Entra ID** | El "AD de la nube" (antes Azure AD). Otro producto, no un AD migrado. |
 

@@ -47,11 +47,11 @@ Active Directory **no es una sola tecnología**, es un producto que integra vari
 
 ## 1.3 El modelo mental: iniciar sesión en un dominio
 
-Qué pasa físicamente cuando Kevin se sienta en un PC del dominio `corp.lab` y pone su contraseña:
+Qué pasa físicamente cuando John Doe se sienta en un PC del dominio `corp.lab` y pone su contraseña:
 
 1. El PC ya está **unido al dominio** (*join*, capítulo 4): sabe que su autoridad es `corp.lab`.
 2. Para encontrar un controlador de dominio (DC), **consulta DNS**: pide los registros SRV de `_ldap._tcp.dc._msdcs.corp.lab` (capítulo 5).
-3. Con la IP del DC, negocia con **Kerberos** (puerto 88): el DC le devuelve un *ticket* (TGT, capítulo 8) que acredita que es `kevin` sin volver a mandar la contraseña.
+3. Con la IP del DC, negocia con **Kerberos** (puerto 88): el DC le devuelve un *ticket* (TGT, capítulo 8) que acredita que es `jdoe` sin volver a mandar la contraseña.
 4. Con ese ticket, el PC inicia sesión y, además, puede abrir `\\fileserver\datos` **sin volver a poner la contraseña**: presenta el ticket al servidor de ficheros.
 5. Al iniciar sesión, el equipo aplica las **GPO** que le correspondan (capítulo 6).
 
@@ -61,19 +61,19 @@ Todo lo demás del libro son detalles de estas cinco líneas.
 
 La base de datos de AD es un **árbol** de **objetos** (usuarios, equipos, grupos, OU…). Cada objeto tiene atributos (nombre, email, departamento…) y una posición única en el árbol: su **Distinguished Name (DN)**.
 
-El usuario Kevin en la OU de Soporte del dominio `corp.lab`:
+El usuario John Doe en la OU de Soporte del dominio `corp.lab`:
 
 ```
-CN=Kevin Mas,OU=Soporte,OU=Empleados,DC=corp,DC=lab
+CN=John Doe,OU=Soporte,OU=Empleados,DC=corp,DC=lab
 ```
 
-Léelo de izquierda a derecha como «el objeto llamado *Kevin Mas* que está dentro de OU Soporte, dentro de OU Empleados, dentro del dominio corp.lab». Componentes:
+Léelo de izquierda a derecha como «el objeto llamado *John Doe* que está dentro de OU Soporte, dentro de OU Empleados, dentro del dominio corp.lab». Componentes:
 
 - **CN** (Common Name): nombre del objeto.
 - **OU** (Organizational Unit): contenedor organizativo (capítulo 2).
 - **DC** (Domain Component): trozos del dominio DNS, al revés que un FQDN. `corp.lab` → `DC=corp,DC=lab`.
 
-> **Para tu cerebro Linux:** es el mismo truco que un FQDN invertido o que el DN de OpenLDAP (`uid=kevin,ou=people,dc=corp,dc=lab`). Si has hecho `ldapsearch -b "dc=corp,dc=local"`, ya has escrito la mitad de un DN de AD.
+> **Para tu cerebro Linux:** es el mismo truco que un FQDN invertido o que el DN de OpenLDAP (`uid=jdoe,ou=people,dc=corp,dc=lab`). Si has hecho `ldapsearch -b "dc=corp,dc=local"`, ya has escrito la mitad de un DN de AD.
 
 El **esquema** (schema) define qué clases de objetos y atributos existen: es el equivalente al esquema de un servidor LDAP. Como L1 no lo tocarás nunca; basta saber que existe y que es compartido por todo el bosque.
 
