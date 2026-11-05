@@ -33,6 +33,7 @@ const path = Astro.url.pathname;
 		<meta property="og:url" content={canonical} />
 		<meta property="og:type" content="website" />
 		<meta property="og:locale" content={lang === 'fr' ? 'fr_FR' : 'es_ES'} />
+		<script is:inline defer src="https://cloud.umami.is/script.js" data-website-id="d3e99273-94c1-408e-93a5-0e7a472e9072"></script>
 	</head>
 	<body>
 		<a class="sr-only" href="#main">Saltar al contenido</a>
@@ -65,6 +66,17 @@ const path = Astro.url.pathname;
 			</p>
 			<p class="muted">© {new Date().getFullYear()} {SITE.nombre}. Hecho con Astro, sin cookies.</p>
 		</footer>
+		<script is:inline define:vars={{ cvHref: LINKS.cv }}>
+			// Marca enlaces de contacto y descarga de CV para Umami
+			function marcar(selector, evento) {
+				document.querySelectorAll(selector + ':not([data-umami-event])').forEach(function (a) {
+					a.setAttribute('data-umami-event', evento);
+					a.setAttribute('data-umami-event-pagina', location.pathname);
+				});
+			}
+			marcar('a[href^="mailto:"]', 'email_click');
+			marcar('a[href="' + cvHref + '"]', 'download_cv');
+		</script>
 	</body>
 </html>
 
