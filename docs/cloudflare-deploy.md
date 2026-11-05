@@ -39,7 +39,10 @@ Configuración de este repo (`wrangler.jsonc` en la raíz):
 		"directory": "./dist",
 		"not_found_handling": "404-page" // sirve dist/404.html en rutas inexistentes
 	},
-	"routes": [{ "pattern": "kcurtet.com", "custom_domain": true }]
+	"routes": [
+		{ "pattern": "kcurtet.com", "custom_domain": true },
+		{ "pattern": "www.kcurtet.com", "custom_domain": true }
+	]
 }
 ```
 
@@ -77,7 +80,7 @@ Hecha con una **Redirect Rule** del dashboard (zona kcurtet.com), sin código ni
 
 Resultado: `www.kcurtet.com/<path>` → 301 → `https://kcurtet.com/<path>`. Solo el dominio raíz es canónico.
 
-Nota (verificado empíricamente): las Redirect Rules se evalúan **antes** de que el request llegue al worker. Es válido adjuntar `www` como custom domain del worker y además tener la regla: la regla dispara (301) y el worker no llega a servir ese hostname. El único requisito duro es que exista el registro DNS proxied: si `www` no resuelve, la regla no se evalúa. La opción elegida aquí (registro + regla, sin custom domain) es simplemente una pieza menos.
+Nota (verificado empíricamente): las Redirect Rules se evalúan **antes** de que el request llegue al worker. Por eso `www` figura también como custom domain en `wrangler.jsonc`: aunque el hostname esté adjuntado al worker, la regla dispara (301) y el worker no llega a servir ese hostname. El único requisito duro de la regla es el registro DNS proxied: si `www` no resuelve, no se evalúa.
 
 ## 6. DNS
 
