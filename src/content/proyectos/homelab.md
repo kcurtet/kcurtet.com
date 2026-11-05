@@ -1,33 +1,29 @@
 ---
 title: Homelab y red de casa
-resumen: Empezó para quitarle la publicidad a mi familia y hoy es donde enseño webs a clientes, me conecto a mis equipos desde cualquier sitio y guardo las copias de seguridad.
-stack: [Pi-hole, Tailscale, Wake-on-LAN, Docker, Dokku, Coolify, Cloudflare Tunnel, Let's Encrypt]
+resumen: Empezó para quitarle la publicidad a mi familia y acabó siendo donde enseño webs a clientes, me conecto a mis equipos y guardo copias. Ahora lo estoy reconstruyendo para que no dependa de mí.
+stack: [Pi-hole, Tailscale, Docker, Dokku, Coolify, Cloudflare Tunnel, Let's Encrypt, restic]
 orden: 1
 ---
-
-<!-- REVISAR: si quieres, añade el hardware concreto (modelo de la Raspberry, la torre, el disco de backups) y una captura del panel de Pi-hole. -->
 
 ## Por qué empecé
 
 En casa somos tres: mi madre, mi hermano y yo. Yo podía bloquear la publicidad en mi navegador, pero ellos no, y no iba a ir instalando extensiones dispositivo por dispositivo, sobre todo en móviles y en la tele, donde ni siquiera se puede.
 
-Así que lo resolví a nivel de red: monté un **Pi-hole** y lo convertí en el DNS de toda la casa. Para que todos los dispositivos lo usaran sin configurar nada, le di también el **DHCP**: desactivé el del router y ahora es Pi-hole quien reparte las IPs y se anuncia como DNS. Mi madre y mi hermano no tuvieron que hacer nada; simplemente dejaron de ver anuncios.
+Así que lo resolví a nivel de red: monté un **Pi-hole** y lo convertí en el DNS de toda la casa. Para que todos los dispositivos lo usaran sin configurar nada, le di también el **DHCP**: desactivé el del router y Pi-hole pasó a repartir las IPs y a anunciarse como DNS. Mi madre y mi hermano no tuvieron que hacer nada; simplemente dejaron de ver anuncios.
 
-Esa decisión tiene una consecuencia que siempre tengo presente: **en mi casa, yo soy el helpdesk**. Si el Pi-hole se cae, para ellos "no va Internet", aunque la conexión funcione perfectamente. Es exactamente el síntoma de [Hay Internet pero no se resuelven nombres](/notas/dns-no-resuelve/).
+## El fallo de diseño
 
-Y el helpdesk no siempre está en casa. Por eso dejé un **plan B que no depende de mí**: un segundo Wi-Fi que da acceso a la misma red pero no pasa por el Pi-hole. Si algo falla cuando no estoy, mi madre o mi hermano solo tienen que conectarse a ese otro Wi-Fi y siguen con Internet (con anuncios, eso sí) hasta que vuelva y lo arregle.
+Esa decisión tenía una consecuencia: **en mi casa, yo era el helpdesk**. Si el Pi-hole se caía, para ellos "no iba Internet", aunque la conexión funcionara perfectamente. Es exactamente el síntoma de [Hay Internet pero no se resuelven nombres](/notas/dns-no-resuelve/).
+
+Y no tenía plan B. Si yo no estaba, se quedaban sin Internet hasta que volviera. Había convertido una Raspberry Pi en un **punto único de fallo** para toda la casa. Funcionaba, pero no estaba bien diseñado.
 
 ## Conectarme a casa desde cualquier sitio
 
-Con **Tailscale** todos mis equipos están en una misma red privada, estén donde estén, sin abrir un solo puerto en el router. Desde fuera puedo:
-
-- entrar a mi **torre** y, desde ella, saltar a lo que necesite de la red de casa;
-- **despertar el portátil con Wake-on-LAN** si está apagado y conectarme a él;
-- consultar mis archivos de casa en cualquier momento.
+Con **Tailscale** todos mis equipos están en una misma red privada, estén donde estén, sin abrir un solo puerto en el router. Desde fuera puedo entrar a mi **torre** y, desde ella, saltar a lo que necesite de la red de casa o consultar mis archivos.
 
 ## Enseñar trabajo a clientes
 
-El homelab también trabaja para [Nutux Labs](https://nutuxlabs.com). Lo uso para alojar webs temporales y personales con **Dokku** y **Coolify** (despliegue con `git push`, cada web en su contenedor), y las publico con **Cloudflare Tunnel** sin exponer mi IP.
+El homelab también trabaja para [Nutux Labs](https://nutuxlabs.com). Lo he usado para alojar webs temporales y personales con **Dokku** y **Coolify** (despliegue con `git push`, cada web en su contenedor), publicadas con **Cloudflare Tunnel** sin exponer mi IP.
 
 Lo mejor que me ha dado: a una clienta le preparé **varias versiones de su web** y se las enseñé desde mi propio servidor. Pudo verlas, elegir la que más le gustaba e incluso **combinar partes de varias**. Fue mucho más ágil que ir y venir con capturas y cambios.
 
@@ -37,15 +33,25 @@ Para algunas webs personales que solo quería ver yo, al principio monté **mi p
 
 Pero cada dispositivo nuevo era instalar la CA otra vez. Al final me pasé a **Let's Encrypt**: certificados de confianza pública que se renuevan solos. Es la opción práctica; la CA propia fue la que me enseñó por qué.
 
-## Copias de seguridad
+## Ahora: reconstruirlo bien
 
-Lo último que añadí: **backups a un disco duro viejo conectado por USB**. Un disco que ya no usaba ahora guarda las copias de lo que no quiero perder.
+Estoy rehaciendo todo el homelab en una **Raspberry Pi 5 con SSD**, esta vez de forma reproducible: cada parte es un Docker Compose con su guía paso a paso, en un [repositorio público](https://github.com/kcurtet/homelab). Lo que cambia:
+
+- **Failover de DNS automático.** El DHCP de Pi-hole anunciará dos DNS: el Pi-hole como primario y el router como secundario. Si el Pi-hole cae, los dispositivos pasan solos al router: vuelven los anuncios, pero nadie se queda sin Internet ni tiene que esperarme. El coste lo acepto: algunos dispositivos consultan a veces el secundario aunque todo funcione, y se cuela algo de publicidad.
+- **Migración del DHCP con plan de vuelta atrás.** Primero compruebo el DNS del router, luego activo el DHCP de Pi-hole, después apago el del router y verifico dispositivo por dispositivo. Si algo falla, hay un procedimiento para volver al estado anterior.
+- **Copias con restic** a un disco USB viejo, programadas cada noche, y con la **restauración probada**: un backup que no has restaurado nunca no es un backup.
+
+Estado: lo estoy probando en un portátil. La red de casa todavía no la he tocado; ahora mismo el DNS y el DHCP los da el router, y el Pi-hole solo vuelve cuando el failover esté verificado en la Raspberry.
 
 ## Qué me ha enseñado
 
-- **El DNS es un punto único de fallo, y hay que diseñar para cuando falle.** Si centralizas el DNS, todos dependen de él; por eso existe el Wi-Fi de respaldo, y por eso tiene que poder usarlo alguien que no sabe qué es un DNS.
+- **El DNS es un punto único de fallo, y hay que diseñar para cuando falle.** La primera vez no lo hice; ahora el diseño parte de ahí.
 - **DHCP y DNS van juntos.** Saber quién reparte qué IP y qué DNS anuncia es la mitad del diagnóstico de cualquier red.
 - **Abrir puertos es el último recurso.** Con una VPN de malla y túneles casi nunca hace falta.
 - **Entender lo complicado para elegir lo práctico.** La CA propia me enseñó cómo funcionan los certificados; por eso sé por qué Let's Encrypt es la buena opción.
 
 Todo esto es la base para lo que estoy aprendiendo ahora: en Active Directory, [el DNS es el corazón del dominio](/blog/de-linux-a-active-directory/).
+
+## ¿Quieres montarlo tú?
+
+Todo está en [github.com/kcurtet/homelab](https://github.com/kcurtet/homelab): los Docker Compose de cada fase y las guías de instalación, migración del DHCP y restauración de copias.
