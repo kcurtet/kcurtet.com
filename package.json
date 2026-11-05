@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy && wrangler deploy -c www-redirect/wrangler.jsonc"
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
