@@ -81,6 +81,10 @@ Reglas prácticas de diseño que te pueden preguntar:
 - **Nunca** dejes cuentas en los contenedores por defecto `Users` y `Computers`: son contenedores planos (ni siquiera OUs reales) a los que no se pueden vincular GPOs útiles. Al unir un equipo, muévelo a su OU (capítulo 4).
 - Los grupos de seguridad suelen agruparse en una OU propia (`Grupos`), no junto a los usuarios.
 
+### El primer muro que te vas a encontrar: OUs «que no se dejan borrar»
+
+Toda OU nueva se crea con la casilla **«Protect object from accidental deletions»** activada. Intenta borrarla y AD te suelta un error de privilegios que parece no tener sentido: no es que te falten permisos, es esa protección funcionando. Para borrar de verdad (con un ticket detrás, nunca «porque estorba»): en ADUC, **Vista → Características avanzadas** (*View → Advanced Features*) → propiedades de la OU → pestaña **Objeto** → desmarca la casilla → ya puedes borrar. Desactiva la vista avanzada al terminar: expone ruido que un L1 no necesita ver.
+
 ## 2.5 Delegación: cómo te darán acceso tú
 
 El flujo habitual cuando entras de L1 en una empresa:
@@ -90,6 +94,16 @@ El flujo habitual cuando entras de L1 en una empresa:
 3. Ese grupo tiene **control delegado** sobre `OU=Empleados` para dos tareas: *Reset password* y *Force change password at next logon* (y quizá *unlock account*).
 
 Consecuencia práctica: verás usuarios y operaciones solo de tu OU. Si intentas tocar algo fuera, AD te dirá **Access Denied** — y eso está bien: escalarlo o pedir el permiso adecuado, nunca «apañarlo».
+
+**Cómo se monta (para tu lab):** en ADUC, clic derecho sobre la OU → *Delegate Control* → añades el grupo delegado → eliges las tareas (las de reset vienen de plantilla: *Reset user passwords and force password change at next logon*). Es el camino del 99 % de empresas; la alternativa es editar permisos de seguridad avanzados a mano.
+
+**Y compruébalo en carne propia:** entra con una cuenta del grupo delegado y resetea la contraseña de un usuario de esa OU — desde ADUC o PowerShell (nota: en PowerShell, no en CMD):
+
+```powershell
+Set-ADAccountPassword -Identity sgomez -Reset -NewPassword (Read-Host -AsSecureString)
+```
+
+Funciona dentro de la OU y da *Access Denied* en cuanto apuntas fuera de ella. Ese límite exacto es tu contrato de trabajo en AD.
 
 ## 2.6 Lo que existe pero NO necesitas aún (señales de N2+)
 

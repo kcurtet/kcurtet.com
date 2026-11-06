@@ -119,6 +119,14 @@ New-SmbShare -Name Datos -Path C:\Compartido -FullAccess "Authenticated Users"
 Add-WindowsCapability -Online -Name "Rsat.ActiveDirectory.DS-LDAPTools~~~~0.0.1.0"
 ```
 
+5. **Bonus de realismo: RDP desde tu Linux.** La consola de la VM vale para instalar; para trabajar día a día, conéctate por RDP — que es exactamente la herramienta que usarás todo el día como L1 para entrar en los PCs de los usuarios:
+
+```bash
+xfreerdp /v:192.168.56.20 /u:CORP\klab /dynamic-resolution +clipboard
+```
+
+   En Arch y derivadas: `pacman -S freerdp2`. Te pedirá la contraseña al conectar — y acostúmbrate ya a no pasarla en la línea de comandos: queda en el historial de la shell.
+
 ## 11.5 Checkpoints de logro
 
 Tu lab está «completo» cuando puedes marcar todo:
@@ -130,6 +138,7 @@ Tu lab está «completo» cuando puedes marcar todo:
 - [ ] `\\DC1\Datos` accesible con permisos por grupos verificados (cap. 7)
 - [ ] Has roto y reparado la confianza del cliente UNA vez (cap. 4)
 - [ ] `ldapsearch` desde tu host Linux contra el DC funciona (cap. 9 — puede requerir red puente momentánea o `virt-viewer` port-forwarding; documentado como reto extra)
+- [ ] Te conectas al cliente por RDP (`xfreerdp`) desde tu Linux como si fueras a resolver una incidencia
 
 ## 11.6 Alternativa ligera: Samba AD DC (para días de RAM justa)
 

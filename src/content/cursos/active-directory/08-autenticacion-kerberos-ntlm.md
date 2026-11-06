@@ -46,6 +46,8 @@ Tres consecuencias prácticas que explicarás en la entrevista:
 
 Lectura L1: cuando veas NTLM en un diagnóstico no te asustes: es normal verlo; lo anómalo es *depender* de él en masa. Su desactivación progresiva es cosa de N2/seguridad.
 
+**Por qué lo verás también en contexto de seguridad:** con una sola cuenta válida —ni siquiera admin— cualquiera puede listar usuarios y equipos de todo el dominio leyendo SMB (el recurso `IPC$`, con herramientas tipo NetExec), y con un hash NTLM robado autenticarse sin conocer la contraseña (pass-the-hash). De ahí que tus rutinas de L1 —deshabilitar cuentas de bajas *el mismo día*, no compartir credenciales, denunciar contraseñas post-it— sean literalmente lo que cierra esas puertas.
+
 ## 8.4 Bloqueos de cuenta: la investigación que te hace parecer senior
 
 La política (Default Domain Policy): **umbral** de intentos fallidos (típico 5), **duración** del bloqueo (típico 15 min) y **ventana de recuento**. Por defecto un dominio nuevo viene con bloqueo *desactivado* (umbral 0); las empresas lo activan. Bloquear ≠ deshabilitar: el bloqueo es automático y temporal; deshabilitar es manual (cap. 3).
