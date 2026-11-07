@@ -41,7 +41,7 @@ Estoy rehaciendo todo el homelab en una **Raspberry Pi 5 con SSD**, esta vez de 
 - **Migración del DHCP con plan de vuelta atrás.** Primero compruebo el DNS del router, luego activo el DHCP de AdGuard Home, después apago el del router y verifico dispositivo por dispositivo. Si algo falla, hay un procedimiento para volver al estado anterior.
 - **Copias con restic** a un disco USB viejo, programadas cada noche, y con la **restauración probada**: un backup que no has restaurado nunca no es un backup.
 
-Estado: lo estoy probando en un portátil. La red de casa todavía no la he tocado; ahora mismo el DNS y el DHCP los da el router, y el AdGuard Home solo vuelve cuando el failover esté verificado en la Raspberry.
+Estado: **el portátil de pruebas ya corre el lab completo** — traefik como único proxy de entrada, dokku para desplegar con `git push`, dashboard, copias nocturnas con restic y monitorización con uptime-kuma que avisa por Telegram. La red de casa sigue intacta: el DNS y el DHCP los da el router, y el AdGuard Home solo vuelve como DNS de toda la casa cuando el failover esté verificado en la Raspberry.
 
 ## Qué me ha enseñado
 
