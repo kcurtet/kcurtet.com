@@ -32,7 +32,7 @@ Si conoces `dig`, `ldapsearch`, systemd y Docker, este libro te habla en tu idio
 | 2 | [02-anatomia-de-ad.md](/cursos/active-directory/02-anatomia-de-ad/) | DC, bosque, árbol, dominio, OU: el mapa mental completo. |
 | 3 | [03-usuarios-y-grupos.md](/cursos/active-directory/03-usuarios-y-grupos/) | Crear, deshabilitar, desbloquear, resetear contraseñas. Grupos y AGDLP. **El pan de cada día L1.** |
 | 4 | [04-equipos-y-join.md](/cursos/active-directory/04-equipos-y-join/) | Unir equipos al dominio, cuentas de máquina, la confianza rota. |
-| 5 | [05-dns-el-corazon-de-ad.md](/cursos/active-directory/05-dns-el-corazon-de-ad/) | **Capítulo estrella**: SRV, zonas integradas, por qué el AD muere si muere el DNS. Caso Pi-hole. |
+| 5 | [05-dns-el-corazon-de-ad.md](/cursos/active-directory/05-dns-el-corazon-de-ad/) | **Capítulo estrella**: SRV, zonas integradas, por qué el AD muere si muere el DNS. Caso AdGuard Home. |
 | 6 | [06-gpos.md](/cursos/active-directory/06-gpos/) | GPO: qué son, herencia LSDOU, ejemplos N1 (USB, fondo, unidades mapeadas). |
 | 7 | [07-permisos-ntfs-vs-compartido.md](/cursos/active-directory/07-permisos-ntfs-vs-compartido/) | NTFS vs permisos de compartido y la combinación efectiva. Pregunta clásica de entrevista. |
 | 8 | [08-autenticacion-kerberos-ntlm.md](/cursos/active-directory/08-autenticacion-kerberos-ntlm/) | Kerberos y NTLM alto nivel, bloqueos de cuenta, políticas de contraseña. |

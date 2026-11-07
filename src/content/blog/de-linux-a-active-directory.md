@@ -8,7 +8,7 @@ tags: [Active Directory, Windows, DNS, soporte]
 
 <!-- REVISAR: este post lo he redactado a partir de tus notas. Cámbialo a tu voz antes de publicar. -->
 
-Uso Linux a diario desde hace años: mi portátil corre NixOS, tengo un homelab con contenedores y la red de casa la gobierna un Pi-hole. Pero hay un mundo que casi no he tocado y que sostiene casi todas las oficinas: **Windows con Active Directory**.
+Uso Linux a diario desde hace años: mi portátil corre NixOS, tengo un homelab con contenedores y la red de casa la gobierna un AdGuard Home. Pero hay un mundo que casi no he tocado y que sostiene casi todas las oficinas: **Windows con Active Directory**.
 
 En soporte IT es el pan de cada día: desbloquear cuentas, resetear contraseñas, unir equipos al dominio, entender por qué no se aplica una GPO o por qué alguien no ve una carpeta compartida. Así que voy a aprenderlo, y a contarlo aquí mientras lo hago.
 
@@ -34,7 +34,7 @@ En soporte IT es el pan de cada día: desbloquear cuentas, resetear contraseñas
 2. Anatomía: bosque, dominio, OU y DC.
 3. Usuarios y grupos: lo que más hace un helpdesk.
 4. Unir equipos al dominio y cuando se rompe la confianza.
-5. **DNS, el corazón de AD**, con un caso real: qué pasa cuando metes un dominio en una red donde el DNS es un Pi-hole.
+5. **DNS, el corazón de AD**, con un caso real: qué pasa cuando metes un dominio en una red donde el DNS es un AdGuard Home.
 6. GPO, permisos NTFS frente a permisos de compartido, Kerberos, y Entra ID.
 
 Todo lo practico en un laboratorio con máquinas virtuales en casa, y contaré también cómo montarlo.

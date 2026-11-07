@@ -1,7 +1,7 @@
 ---
 title: Homelab y red de casa
 resumen: Empezó para quitarle la publicidad a mi familia y acabó siendo donde enseño webs a clientes, me conecto a mis equipos y guardo copias. Ahora lo estoy reconstruyendo para que no dependa de mí.
-stack: [Pi-hole, Tailscale, Docker, Dokku, Coolify, Cloudflare Tunnel, Let's Encrypt, restic]
+stack: [AdGuard Home, Tailscale, Docker, Dokku, Coolify, Cloudflare Tunnel, Let's Encrypt, restic]
 orden: 1
 ---
 
@@ -9,11 +9,11 @@ orden: 1
 
 En casa somos tres: mi madre, mi hermano y yo. Yo podía bloquear la publicidad en mi navegador, pero ellos no, y no iba a ir instalando extensiones dispositivo por dispositivo, sobre todo en móviles y en la tele, donde ni siquiera se puede.
 
-Así que lo resolví a nivel de red: monté un **Pi-hole** y lo convertí en el DNS de toda la casa. Para que todos los dispositivos lo usaran sin configurar nada, le di también el **DHCP**: desactivé el del router y Pi-hole pasó a repartir las IPs y a anunciarse como DNS. Mi madre y mi hermano no tuvieron que hacer nada; simplemente dejaron de ver anuncios.
+Así que lo resolví a nivel de red: monté **AdGuard Home** y lo convertí en el DNS de toda la casa. Para que todos los dispositivos lo usaran sin configurar nada, le di también el **DHCP**: desactivé el del router y AdGuard Home pasó a repartir las IPs y a anunciarse como DNS. Mi madre y mi hermano no tuvieron que hacer nada; simplemente dejaron de ver anuncios.
 
 ## El fallo de diseño
 
-Esa decisión tenía una consecuencia: **en mi casa, yo era el helpdesk**. Si el Pi-hole se caía, para ellos "no iba Internet", aunque la conexión funcionara perfectamente. Es exactamente el síntoma de [Hay Internet pero no se resuelven nombres](/notas/dns-no-resuelve/).
+Esa decisión tenía una consecuencia: **en mi casa, yo era el helpdesk**. Si AdGuard Home se caía, para ellos "no iba Internet", aunque la conexión funcionara perfectamente. Es exactamente el síntoma de [Hay Internet pero no se resuelven nombres](/notas/dns-no-resuelve/).
 
 Y no tenía plan B. Si yo no estaba, se quedaban sin Internet hasta que volviera. Había convertido una Raspberry Pi en un **punto único de fallo** para toda la casa. Funcionaba, pero no estaba bien diseñado.
 
@@ -37,11 +37,11 @@ Pero cada dispositivo nuevo era instalar la CA otra vez. Al final me pasé a **L
 
 Estoy rehaciendo todo el homelab en una **Raspberry Pi 5 con SSD**, esta vez de forma reproducible: cada parte es un Docker Compose con su guía paso a paso, en un [repositorio público](https://github.com/kcurtet/homelab). Lo que cambia:
 
-- **Failover de DNS automático.** El DHCP de Pi-hole anunciará dos DNS: el Pi-hole como primario y el router como secundario. Si el Pi-hole cae, los dispositivos pasan solos al router: vuelven los anuncios, pero nadie se queda sin Internet ni tiene que esperarme. El coste lo acepto: algunos dispositivos consultan a veces el secundario aunque todo funcione, y se cuela algo de publicidad.
-- **Migración del DHCP con plan de vuelta atrás.** Primero compruebo el DNS del router, luego activo el DHCP de Pi-hole, después apago el del router y verifico dispositivo por dispositivo. Si algo falla, hay un procedimiento para volver al estado anterior.
+- **Failover de DNS automático.** El DHCP de AdGuard Home anunciará dos DNS: AdGuard Home como primario y el router como secundario. Si AdGuard Home cae, los dispositivos pasan solos al router: vuelven los anuncios, pero nadie se queda sin Internet ni tiene que esperarme. El coste lo acepto: algunos dispositivos consultan a veces el secundario aunque todo funcione, y se cuela algo de publicidad.
+- **Migración del DHCP con plan de vuelta atrás.** Primero compruebo el DNS del router, luego activo el DHCP de AdGuard Home, después apago el del router y verifico dispositivo por dispositivo. Si algo falla, hay un procedimiento para volver al estado anterior.
 - **Copias con restic** a un disco USB viejo, programadas cada noche, y con la **restauración probada**: un backup que no has restaurado nunca no es un backup.
 
-Estado: lo estoy probando en un portátil. La red de casa todavía no la he tocado; ahora mismo el DNS y el DHCP los da el router, y el Pi-hole solo vuelve cuando el failover esté verificado en la Raspberry.
+Estado: lo estoy probando en un portátil. La red de casa todavía no la he tocado; ahora mismo el DNS y el DHCP los da el router, y el AdGuard Home solo vuelve cuando el failover esté verificado en la Raspberry.
 
 ## Qué me ha enseñado
 

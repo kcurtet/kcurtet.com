@@ -12,7 +12,7 @@ orden: 5
 - Explicar por qué AD depende radicalmente de DNS (la pregunta que separa candidatos).
 - Leer los registros SRV de un dominio real y saber crear la consulta a mano.
 - Configurar correctamente el DNS de clientes, DCs y forwarders.
-- Diagnosticar «AD roto por DNS» con nslookup/nltest, y aplicar el caso real de convivencia con Pi-hole.
+- Diagnosticar «AD roto por DNS» con nslookup/nltest, y aplicar el caso real de convivencia con AdGuard Home.
 
 ## 5.1 Por qué AD eligió DNS
 
@@ -77,7 +77,7 @@ Además, el DNS del DC suele tener **forwarders** (8.8.8.8, 1.1.1.1, o el DNS co
 
 **Regla de oro:**
 
-- **Clientes del dominio**: DNS = la IP de los DCs (por DHCP se reparte). Ni el router, ni el 8.8.8.8, ni «el Pi-hole de casa»… directamente.
+- **Clientes del dominio**: DNS = la IP de los DCs (por DHCP se reparte). Ni el router, ni el 8.8.8.8, ni «el AdGuard Home de casa»… directamente.
 - **DCs**: DNS = sí mismo (`127.0.0.1` o su propia IP) y como secundario, *otro DC*. Un DC nunca debe apuntar a un DNS externo como principal: es la causa clásica de «tras reiniciar el DC, el dominio medio funciona».
 - **Forwarders** en el DNS del DC para lo que no sea el dominio.
 
@@ -108,14 +108,14 @@ dcdiag /test:dns
 
 Flujo L1 ante «no puedo iniciar sesión / no se une al dominio»: primero el SRV del punto 1. Si falla → problema de DNS del cliente (¿a quién apunta?) o de la zona del DC (¿están los registros?). Si el SRV funciona → el problema ya no es de localización: sigue con puertos/credenciales (cap. 9).
 
-## 5.6 Caso práctico personalizado: AD + Pi-hole en la misma red
+## 5.6 Caso práctico personalizado: AD + AdGuard Home en la misma red
 
-Escenario real para ti: red con Pi-hole como DNS de todos (DHCP lo reparte) y un dominio `corp.lab` con su DC. Resultado típico: los clientes preguntan a Pi-hole por `_ldap._tcp.dc._msdcs.corp.lab`; Pi-hole consulta upstream (o bloquea el dominio nuevo) y devuelve NXDOMAIN o nada. Los clientes no encuentran DC: logins lentos o fallidos, joins imposibles, GPOs erráticas.
+Escenario real para ti: red con AdGuard Home como DNS de todos (DHCP lo reparte) y un dominio `corp.lab` con su DC. Resultado típico: los clientes preguntan a AdGuard Home por `_ldap._tcp.dc._msdcs.corp.lab`; AdGuard Home consulta upstream y devuelve NXDOMAIN o nada. Los clientes no encuentran DC: logins lentos o fallidos, joins imposibles, GPOs erráticas.
 
 **Dos soluciones correctas (elige una, no ambas):**
 
-1. **La limpia — corporativa:** DHCP reparte como DNS la IP del DC (el DC tiene forwarders a Pi-hole o a 1.1.1.1 para internet). El dominio se resuelve local; el resto se filtra igual. Es la que espera una empresa: *los clientes del dominio apuntan a los DC.*
-2. **La casera — condicional:** los clientes siguen en Pi-hole, y en Pi-hole configuras un **DNS condicional**: `corp.lab` → `192.168.56.10` (el DC). En la GUI: Settings → DNS → *Domain-unqualified forwarding* o entrada de condicional según versión; equivalente a lo que en BIND sería:
+1. **La limpia — corporativa:** DHCP reparte como DNS la IP del DC (el DC tiene forwarders a AdGuard Home o a 1.1.1.1 para internet). El dominio se resuelve local; el resto se filtra igual. Es la que espera una empresa: *los clientes del dominio apuntan a los DC.*
+2. **La casera — condicional:** los clientes siguen en AdGuard Home, y en AdGuard Home configuras un **DNS condicional**: `corp.lab` → `192.168.56.10` (el DC). En la GUI: Settings → DNS settings → Upstream DNS servers, con la entrada por dominio `[/corp.lab/]192.168.56.10`; equivalente a lo que en BIND sería:
 
 ```bind
 zone "corp.lab" IN {
@@ -156,5 +156,5 @@ R: Una zona guardada dentro de la base de datos de AD y replicada entre DCs, que
 1. **Lab:** tras montar el dominio (cap. 11), ejecuta desde el cliente `nslookup -type=SRV _ldap._tcp.dc._msdcs.corp.lab` y pegotea la salida en tus notas. Anota cada campo y qué significa.
 2. **Lab — romper a propósito:** cambia el DNS del cliente a `8.8.8.8`, intenta iniciar sesión con un usuario de dominio y observa el error exacto. Vuelve a ponerlo bien. Este contraste es la lección del capítulo entero.
 3. **Lab — scavenging de registro:** borra a mano (en el DNS del DC) el registro A de `dc1`. Comprueba qué falla y qué no. Restáuralo (se re-registra solo tras `ipconfig /registerdns` o reinicio del servicio Netlogon en el DC).
-4. **Personal:** monta en tu red el escenario Pi-hole + lab de la sección 5.6 con el forwarding condicional y documenta qué síntomas ves antes del fix. Es experiencia real que contar en entrevista.
+4. **Personal:** monta en tu red el escenario AdGuard Home + lab de la sección 5.6 con el forwarding condicional y documenta qué síntomas ves antes del fix. Es experiencia real que contar en entrevista.
 5. **De papel:** redacta en 4 líneas tu respuesta a «¿por qué el AD se rompe cuando se rompe el DNS?» sin mirar la sección 5.7.
